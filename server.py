@@ -41,7 +41,7 @@ def login():
         return createJWT(auth.username, os.environ.get("JWT_SECRET"), True)
 
 
-@server.route("/validate", method=["POST"])
+@server.route("/validate", methods=["POST"])
 def validate():
     encoded_jwt = request.headers["Authorization"]
 
