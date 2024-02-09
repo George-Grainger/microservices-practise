@@ -1,4 +1,7 @@
-import os, gridfs, pika, json
+import os
+import gridfs
+import pika
+import json
 from flask import Flask, request
 from flask_pymongo import PyMongo
 from auth import validate
@@ -6,9 +9,7 @@ from auth_service import access
 from storage import util
 
 server = Flask(__name__)
-server.config["MONGO_URI"] = "mongodb://host.minikube.internal:27017/videos"
-
-mongo = PyMongo(server)
+mongo = PyMongo(server, uri="mongodb://host.minikube.internal:27017/videos")
 
 # Enables us to use https://www.mongodb.com/docs/manual/core/gridfs/
 fs = gridfs.GridFS(mongo.db)
@@ -16,6 +17,7 @@ fs = gridfs.GridFS(mongo.db)
 # Synchronous connection with RabbitMQ
 connection = pika.BlockingConnection(pika.ConnectionParameters("rabbitmq"))
 channel = connection.channel()
+
 
 @server.route("/login", methods=["POST"])
 def login():
@@ -25,7 +27,7 @@ def login():
         return token
     else:
         return err
-    
+
 
 @server.route("/upload", methods=["POST"])
 def upload():
@@ -35,7 +37,7 @@ def upload():
     if access_obj["admin"]:
         if len(request.files) != 1:
             return "exactly 1 file required", 400
-        
+
         # Should only be one file so should only happen once
         f = request.files.values()[0]
         err = util.upload(f, fs, channel, access_obj)
@@ -46,7 +48,7 @@ def upload():
             return "success", 200
     else:
         return "not authorized", 401
-    
+
 
 @server.route("/download", methods=["GET"])
 def download():
