@@ -1,13 +1,15 @@
-import os, requests
+import os
+import requests
+
 
 def token(request):
     if not "Authorization" in request.headers:
         return None, ("invalid credentials", 401)
-    
+
     token = request.headers["Authorization"]
     if not token:
         return None, ("invalid credentials", 401)
-    
+
     response = requests.post(
         f"http://{os.environ.get('AUTH_SERVICE_ADDRESS')}/validate",
         headers={"Authorization": token}

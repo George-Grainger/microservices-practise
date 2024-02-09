@@ -1,4 +1,6 @@
-import pika, json
+import pika
+import json
+
 
 def upload(f, fs, channel, access):
     try:
@@ -6,7 +8,7 @@ def upload(f, fs, channel, access):
     # Catching all exceptions - surely bad practice?
     except Exception as err:
         return "internal server error", 500
-    
+
     message = {
         "video_fid": str(fid),
         "mp3_fid": None,
