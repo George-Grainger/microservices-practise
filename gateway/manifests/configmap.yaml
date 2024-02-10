@@ -1,6 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gateway-configmap
+  name: auth-configmap
 data:
-  AUTH_SERVICE_ADDRESS: "auth:5000"
+  MYSQL_HOST: mysql
+  MYSQL_USER: auth_user
+  MYSQL_DB: auth
+  MYSQL_PORT: "3306"
