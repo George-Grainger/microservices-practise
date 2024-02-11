@@ -13,6 +13,10 @@ spec:
         # Use secret in real usage
         - name: MYSQL_ROOT_PASSWORD
           value: Hs0%EUovc$R9pEPV
+      resources:
+        limits:
+          memory: "256Mi"
+          cpu: "500m"
       ports:
         - containerPort: 3306
       volumeMounts:

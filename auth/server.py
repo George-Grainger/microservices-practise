@@ -50,13 +50,13 @@ def validate():
 
     # Not checking if authorization type is bearer
     # Would want to do this in production app
-    encoded_jwt = encoded_jwt.split(" ")
-
+    encoded_jwt = encoded_jwt.split(" ")[1]
     try:
-        decoded = jwt.decode(encoded_jwt, os.environ.get(
-            "JWT_SECRET"), algorithm=["HS256"])
-    except:
-        return "not authorized", 403
+        decoded = jwt.decode(encoded_jwt,
+                             os.environ.get("JWT_SECRET"), algorithms=["HS256"])
+    except Exception as err:
+        print(err)
+        return f"not authorized\n{err}", 403
 
     return decoded, 200
 
@@ -67,7 +67,7 @@ def createJWT(username, secret, authz):
         {
             "username": username,
             "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1),
-            "iat": datetime.utcnow(),
+            "iat": datetime.datetime.utcnow(),
             "admin": authz,
         },
         secret,
